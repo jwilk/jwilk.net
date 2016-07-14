@@ -1,0 +1,27 @@
+#!/usr/bin/python3
+
+import socket
+import sys
+
+class Host(object):
+
+    def _get_addr(self):
+        for t in socket.getaddrinfo(self.host, 'http', 0, socket.SOCK_STREAM):
+            yield t[-1][0]
+
+    def __init__(self, host):
+        self.host = host
+        self.addr = set(self._get_addr())
+
+def main():
+    h1 = Host('jwilk.nfshost.com')
+    h2 = Host('jwilk.net')
+    for (src, dst) in [(h1, h2), (h2, h1)]:
+        for addr in src.addr - dst.addr:
+            print('{addr} not in {host}'.format(addr=addr, host=dst.host))
+    sys.exit(h1.addr != h2.addr)
+
+if __name__ == '__main__':
+    main()
+
+# vim:ts=4 sts=4 sw=4 et
