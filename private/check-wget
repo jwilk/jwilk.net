@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
 if [ $# -eq 0 ]
 then
     set -- http://jwilk.net
