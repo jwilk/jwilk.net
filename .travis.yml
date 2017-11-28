@@ -4,7 +4,7 @@ language: generic
 install:
 - echo 'deb http://archive.ubuntu.com/ubuntu/ zesty main universe' | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update
-- sudo apt-get install -t zesty hash-slinger
+- sudo apt-get install -t zesty --no-install-recommends hash-slinger
 script:
 - private/check-ip
 - private/check-tlsa
