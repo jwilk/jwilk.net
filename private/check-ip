@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+# Copyright © 2016-2017 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
 import socket
 import sys
 
