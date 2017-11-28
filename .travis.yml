@@ -1,8 +1,13 @@
 dist: trusty
-sudo: false
+sudo: required
 language: generic
+install:
+- echo 'deb http://archive.ubuntu.com/ubuntu/ zesty main universe' | sudo tee -a /etc/apt/sources.list
+- sudo apt-get update
+- sudo apt-get install -t zesty hash-slinger
 script:
 - private/check-ip
+- private/check-tlsa
 - private/check-wget
 
 # vim:ts=2 sts=2 sw=2 et
