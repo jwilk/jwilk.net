@@ -5,7 +5,10 @@ install:
 - echo 'deb http://archive.ubuntu.com/ubuntu/ zesty main universe' | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update
 - sudo apt-get install -t zesty --no-install-recommends hash-slinger
+- git clone https://github.com/jwilk/exp509 ~/exp509
+- export PATH="$HOME/exp509:$PATH"
 script:
+- private/check-cert
 - private/check-ip
 - private/check-tlsa
 - private/check-wget
