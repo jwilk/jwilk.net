@@ -20,7 +20,7 @@ def main():
     h1 = Host('jwilk.nfshost.com')
     h2 = Host('jwilk.net')
     for (src, dst) in [(h1, h2), (h2, h1)]:
-        for addr in src.addr - dst.addr:
+        for addr in sorted(src.addr - dst.addr):
             print('{addr} not in {host}'.format(addr=addr, host=dst.host))
     sys.exit(h1.addr != h2.addr)
 
