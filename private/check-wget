@@ -3,11 +3,36 @@
 # Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
 
-if [ $# -eq 0 ]
+set -e -u
+
+hosts='jwilk.net'
+schemes='http https'
+protos='4'
+if [ -n "$(ip -6 route list match ::)" ]
 then
-    set -- http://jwilk.net
-    set -- "$@" https://jwilk.net
+    protos="$protos 6"
 fi
-exec wget -O /dev/null "$@"
+for host in $hosts
+do
+    tmpdir=$(mktemp -d -t jwilk.net.XXXXXX)
+    cd "$tmpdir"
+    prev_path=
+    for proto in $protos
+    do
+        for scheme in $schemes
+        do
+            export http_proxy="http://localhost:9"
+            export https_proxy="http://localhost:9"
+            unset "${scheme}_proxy"
+            url="$scheme://$host"
+            path="${scheme}-${proto}-${host}"
+            wget -nv "-$proto" -O "$path" "$url"
+            [ -z "$prev_path" ] || diff -u "$path" "$prev_path"
+            prev_path="$path"
+        done
+    done
+    cd /
+    rm -rf "$tmpdir"
+done
 
 # vim:ts=4 sts=4 sw=4 et
