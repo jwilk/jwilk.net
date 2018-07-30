@@ -3,7 +3,7 @@ sudo: required
 language: generic
 services: docker
 install:
-- docker_packages='hash-slinger'
+- docker_packages='hash-slinger gnupg2 dirmngr'
 - sed -e "s/@PACKAGES@/$docker_packages/" .travis.docker > Dockerfile
 - docker build -t ci .
 - with_docker="docker run -v $PWD/private:/src ci sh -c"
@@ -14,5 +14,6 @@ script:
 - private/check-ip
 - private/check-wget
 - $with_docker /src/check-tlsa
+- $with_docker /src/check-wkd
 
 # vim:ts=2 sts=2 sw=2 et
