@@ -1,19 +1,18 @@
 dist: trusty
 sudo: required
 language: generic
+services: docker
 install:
-- echo 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe' | sudo tee -a /etc/apt/sources.list
-- echo 'deb http://archive.ubuntu.com/ubuntu/ bionic main universe' | sudo tee -a /etc/apt/sources.list
-- sudo apt-get update
-- APT_INSTALL='sudo apt-get install --no-install-recommends -t xenial'
-- $APT_INSTALL dpkg
-- $APT_INSTALL hash-slinger/bionic
+- docker_packages='hash-slinger'
+- sed -e "s/@PACKAGES@/$docker_packages/" .travis.docker > Dockerfile
+- docker build -t ci .
+- with_docker="docker run -v $PWD/private:/src ci sh -c"
 - git clone https://github.com/jwilk/exp509 ~/exp509
 - make -C ~/exp509 install PREFIX=~/.local
 script:
 - private/check-cert
 - private/check-ip
-- private/check-tlsa
 - private/check-wget
+- $with_docker /src/check-tlsa
 
 # vim:ts=2 sts=2 sw=2 et
