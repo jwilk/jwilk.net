@@ -6,7 +6,7 @@
 set -e -u
 
 tmpdir=$(mktemp -d -t jwilk.net.XXXXXX)
-gpg2 --homedir "$tmpdir" --auto-key-locate wkd --locate 'jwilk@jwilk.net'
+gpg2 --homedir "$tmpdir" --auto-key-locate wkd --locate-key 'jwilk@jwilk.net'
 diff -u <(
     fmt='fpr:::::::::%s:\n'
     printf "$fmt" CDB5A1243ACDB63009AD07212D4EB3A6015475F5
