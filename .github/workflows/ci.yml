@@ -19,5 +19,8 @@ jobs:
     - name: run checks
       run: |
         prove -v private/check-*
+    - name: run shellcheck
+      run: |
+        shellcheck $(grep -l '#!.*sh$' private/*)
 
 # vim:ts=2 sts=2 sw=2 et
