@@ -5,13 +5,15 @@
 
 set -e -u
 
+fprs=(
+   CDB5A1243ACDB63009AD07212D4EB3A6015475F5
+   C3F5C5D437F265B62D6F9ACF49A526BFE5874F63
+)
 tmpdir=$(mktemp -d -t jwilk.net.XXXXXX)
 gpg2 --homedir "$tmpdir" --auto-key-locate wkd --locate-key 'jwilk@jwilk.net'
-diff -u <(
-    fmt='fpr:::::::::%s:\n'
-    printf "$fmt" CDB5A1243ACDB63009AD07212D4EB3A6015475F5
-    printf "$fmt" C3F5C5D437F265B62D6F9ACF49A526BFE5874F63
-) <(gpg2 --homedir "$tmpdir" --with-colons --list-keys | grep '^fpr:')
+out=$(gpg2 --homedir "$tmpdir" --with-colons --list-keys | grep '^fpr:')
 rm -rf "$tmpdir"
+exp=$(printf 'fpr:::::::::%s:\n' "${fprs[@]}")
+diff -u <(cat <<< "$exp") <(cat <<< "$out")
 
 # vim:ts=4 sts=4 sw=4 et
