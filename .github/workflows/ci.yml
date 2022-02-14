@@ -16,11 +16,8 @@ jobs:
       run: |
         git clone https://github.com/jwilk/exp509 ~/exp509
         make -C ~/exp509 install PREFIX=~/.local
-    - run: prove -v private/check-cert
-    - run: prove -v private/check-ip
-    - run: prove -v private/check-wget
-    - run: prove -v private/check-tlsa
-    - run: prove -v private/check-wkd
-    - run: prove -v private/check-https-redir
+    - name: run checks
+      run: |
+        prove -v private/check-*
 
 # vim:ts=2 sts=2 sw=2 et
