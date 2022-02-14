@@ -22,5 +22,14 @@ jobs:
     - name: run shellcheck
       run: |
         shellcheck $(grep -l '#!.*sh$' private/*)
+    - name: run pydiatra
+      run: |
+        python3 -m pip install setuptools
+        python3 -m pip install pydiatra
+        python3 -m pydiatra -v .
+    - name: run pyflakes
+      run: |
+        python3 -m pip install pyflakes
+        python3 -m pyflakes .
 
 # vim:ts=2 sts=2 sw=2 et
