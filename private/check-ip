@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: MIT
 
 import socket
-import sys
 
 class Host(object):
 
@@ -22,16 +21,23 @@ class Host(object):
 def main():
     hosts = ['jwilk.net', 'jwilk.nfshost.com']
     hosts = [Host(h) for h in hosts]
+    for host in hosts:
+        print('#', host, '=', host.addr)
     all_addr = set()
     for host in hosts:
         all_addr |= host.addr
-    ok = True
+    if not all_addr:
+        print('Bail out! No addresses found')
+    ntests = len(hosts) * len(all_addr)
+    print(1, '..', ntests, sep='')
+    i = 0
     for addr in sorted(all_addr):
         for host in hosts:
+            i += 1
+            status = 'ok'
             if addr not in host.addr:
-                print(addr, 'not in', host)
-                ok = False
-    sys.exit(not ok)
+                status = 'not ok'
+            print(status, i, addr, 'in', host)
 
 if __name__ == '__main__':
     main()
