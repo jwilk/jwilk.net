@@ -16,13 +16,22 @@ class Host(object):
         self.host = host
         self.addr = set(self._get_addr())
 
+    def __str__(self):
+        return self.host
+
 def main():
-    h1 = Host('jwilk.nfshost.com')
-    h2 = Host('jwilk.net')
-    for (src, dst) in [(h1, h2), (h2, h1)]:
-        for addr in sorted(src.addr - dst.addr):
-            print('{addr} not in {host}'.format(addr=addr, host=dst.host))
-    sys.exit(h1.addr != h2.addr)
+    hosts = ['jwilk.net', 'jwilk.nfshost.com']
+    hosts = [Host(h) for h in hosts]
+    all_addr = set()
+    for host in hosts:
+        all_addr |= host.addr
+    ok = True
+    for addr in sorted(all_addr):
+        for host in hosts:
+            if addr not in host.addr:
+                print(addr, 'not in', host)
+                ok = False
+    sys.exit(not ok)
 
 if __name__ == '__main__':
     main()
