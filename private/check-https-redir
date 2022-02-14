@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+# Copyright © 2022 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+set -e -u
+
+ntests=4
+rurls='//jwilk.net/software/'
+schemes='http https'
+protos='4'
+if [ -n "$(ip -6 route list match ::)" ]
+then
+    protos="$protos 6"
+    ntests=$((ntests * 2))
+fi
+echo "1..$ntests"
+declare -i i=0
+for scheme in $schemes
+do
+    export http_proxy="http://localhost:9"
+    export https_proxy="http://localhost:9"
+    unset "${scheme}_proxy"
+    for uir in '' '1'
+    do
+        opts=()
+        if [[ -n $uir ]]
+        then
+            opts+=(-H 'Upgrade-Insecure-Requests: 1')
+        fi
+        for rurl in $rurls
+        do
+            url="${scheme}:$rurl";
+            for proto in $protos
+            do
+                i+=1
+                out=$(curl "${opts[@]}" -f -S -s -o /dev/null -w '%{redirect_url}\n' "-$proto" "$url")
+                xout=''
+                if [[ $scheme = http ]] && [[ -n $uir ]]
+                then
+                    xout="https:$rurl"
+                fi
+                context="$i <$url> IPv$proto [${opts[*]}]"
+                if [[ "$out" == "$xout" ]]
+                then
+                    echo "ok $context"
+                else
+                    echo "not ok $context: unexpected redirect to <$out>"
+                fi
+            done
+        done
+    done
+done
+
+# vim:ts=4 sts=4 sw=4 et

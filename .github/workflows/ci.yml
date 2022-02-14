@@ -21,5 +21,6 @@ jobs:
     - run: private/check-wget
     - run: private/check-tlsa
     - run: private/check-wkd
+    - run: prove -v private/check-https-redir
 
 # vim:ts=2 sts=2 sw=2 et
