@@ -18,7 +18,7 @@ jobs:
         make -C ~/exp509 install PREFIX=~/.local
     - run: prove -v private/check-cert
     - run: prove -v private/check-ip
-    - run: private/check-wget
+    - run: prove -v private/check-wget
     - run: prove -v private/check-tlsa
     - run: prove -v private/check-wkd
     - run: prove -v private/check-https-redir

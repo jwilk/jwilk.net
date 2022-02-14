@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
@@ -8,10 +8,14 @@ set -e -u
 hosts='jwilk.net'
 schemes='http https'
 protos='4'
+declare -i ntests=2
 if [ -n "$(ip -6 route list match ::)" ]
 then
     protos="$protos 6"
+    ntests+=$ntests
 fi
+echo "1..$ntests"
+declare -i i=0
 for host in $hosts
 do
     tmpdir=$(mktemp -d -t jwilk.net.XXXXXX)
@@ -21,13 +25,28 @@ do
     do
         for scheme in $schemes
         do
+            i+=1
             export http_proxy="http://localhost:9"
             export https_proxy="http://localhost:9"
             unset "${scheme}_proxy"
             url="$scheme://$host"
             path="${scheme}-${proto}-${host}"
+            context="$i <$url> IPv$proto"
             wget -nv "-$proto" -O "$path" "$url"
-            [ -z "$prev_path" ] || diff -u "$path" "$prev_path"
+            if [ -z "$prev_path" ]
+            then
+                echo "ok $context"
+            else
+                diff=$(diff -u "$path" "$prev_path") || true
+                if [ -n "$diff" ]
+                then
+                    # shellcheck disable=SC2001
+                    sed -e 's/^/# /' <<< "$diff"
+                    echo "not ok $context"
+                else
+                    echo "ok $context"
+                fi
+            fi
             prev_path="$path"
         done
     done
