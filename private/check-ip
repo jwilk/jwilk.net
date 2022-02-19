@@ -1,45 +1,8 @@
-#!/usr/bin/env python3
+#!/bin/sh
 
-# Copyright © 2016-2022 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2022 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
 
-import socket
-
-class Host(object):
-
-    def _get_addr(self):
-        for t in socket.getaddrinfo(self.host, 'http', 0, socket.SOCK_STREAM):
-            yield t[-1][0]
-
-    def __init__(self, host):
-        self.host = host
-        self.addr = set(self._get_addr())
-
-    def __str__(self):
-        return self.host
-
-def main():
-    hosts = ['jwilk.net', 'jwilk.nfshost.com']
-    hosts = [Host(h) for h in hosts]
-    for host in hosts:
-        print('#', host, '=', host.addr)
-    all_addr = set()
-    for host in hosts:
-        all_addr |= host.addr
-    if not all_addr:
-        print('Bail out! No addresses found')
-    ntests = len(hosts) * len(all_addr)
-    print(1, '..', ntests, sep='')
-    i = 0
-    for addr in sorted(all_addr):
-        for host in hosts:
-            i += 1
-            status = 'ok'
-            if addr not in host.addr:
-                status = 'not ok'
-            print(status, i, addr, 'in', host)
-
-if __name__ == '__main__':
-    main()
+exec ipdiff -T jwilk.nfshost.com jwilk.net
 
 # vim:ts=4 sts=4 sw=4 et

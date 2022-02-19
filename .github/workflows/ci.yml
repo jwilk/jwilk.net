@@ -20,6 +20,10 @@ jobs:
       run: |
         git clone https://github.com/jwilk/exp509 ~/exp509
         make -C ~/exp509 install PREFIX=~/.local
+    - name: install ipdiff
+      run: |
+        git clone https://github.com/jwilk/ipdiff ~/ipdiff
+        make -C ~/ipdiff install PREFIX=~/.local
     - name: run checks
       run: |
         prove -v private/check-*
