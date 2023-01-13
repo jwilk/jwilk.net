@@ -5,6 +5,7 @@
 
 set -e -u
 set -o pipefail
+cd "${0%/*}/.."
 digest=$(openssl pkey -outform der -pubin -pubout -in tls/jwilk.net.1.pub | sha256sum)
 printf '_443._tcp.jwilk.net. 3600 IN TLSA 1 1 1 %s\n' "${digest% *}"
 
