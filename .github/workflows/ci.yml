@@ -13,9 +13,9 @@ jobs:
       run: |
         printf 'Apt::Install-Recommends "false";\n' | sudo tee -a /etc/apt/apt.conf
         sudo apt-get update
-    - name: install hash-slinger
+    - name: install gnutls-cli
       run:
-        sudo apt-get install hash-slinger
+        sudo apt-get install gnutls-bin
     - name: install exp509
       run: |
         git clone https://github.com/jwilk/exp509 ~/exp509
