@@ -6,8 +6,8 @@
 set -e -u
 echo 1..1
 fprs=(
-   CDB5A1243ACDB63009AD07212D4EB3A6015475F5
-   C3F5C5D437F265B62D6F9ACF49A526BFE5874F63
+    7F5D0E9D3323F803D888C31EE1ABC877696EC74E
+    71E4AC1CF2A89106B7ED17CA56F73257722B09D2
 )
 tmpdir=$(mktemp -d -t jwilk.net.XXXXXX)
 gpg2 --homedir "$tmpdir" --auto-key-locate wkd --locate-key 'jwilk@jwilk.net'
